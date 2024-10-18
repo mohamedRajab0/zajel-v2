@@ -75,7 +75,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'zajel_project.wsgi.application'
-
+# Dapne
+ASGI_APPLICATION = "zajel_project.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
