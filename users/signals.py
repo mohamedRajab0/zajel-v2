@@ -15,17 +15,17 @@ def user_postsave(sender, instance, created, **kwargs):
         print("Creating a profile for the user:", user)
         Profile.objects.create(user=user)
         print("Profile created:", user.profile)
-    # else:
-    #     # update allauth emailaddress if exists
-    #     print("user already")
-    #     try:
-    #         email_address = EmailAddress.objects.get_primary(user)
-    #         if email_address.email != user.email:
-    #             email_address.email = user.email
-    #             email_address.verified = False
-    #             email_address.save()
-    #     except:
-    #         # if allauth emailaddress doesn't exist create one
-    #         EmailAddress.objects.create(
-    #             user=user, email=user.email, primary=True, verified=False
-    #         )
+    else:
+        # update allauth emailaddress if exists
+        print("user already")
+        try:
+            email_address = EmailAddress.objects.get_primary(user)
+            if email_address.email != user.email:
+                email_address.email = user.email
+                email_address.verified = False
+                email_address.save()
+        # except:
+        #     # if allauth emailaddress doesn't exist create one
+        #     EmailAddress.objects.create(
+        #         user=user, email=user.email, primary=True, verified=False
+        #     )
