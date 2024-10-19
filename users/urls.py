@@ -19,5 +19,4 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('user/', UserDetailsView.as_view(), name='user'),
-    path('google/', GoogleLogin.as_view(), name='google_login')
 ]
