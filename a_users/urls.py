@@ -1,5 +1,5 @@
 from django.urls import path, include
-from users.views import *
+from a_users.views import *
 from  rest_framework.routers import DefaultRouter
 from dj_rest_auth.views import (
     LoginView, LogoutView, PasswordChangeView, PasswordResetConfirmView,
@@ -7,7 +7,7 @@ from dj_rest_auth.views import (
 )
 from dj_rest_auth.registration.views import RegisterView
 
-app_name = 'users'
+app_name = 'a_users'
 
 router = DefaultRouter()
 router.register(r'profile', ProfileViewSet, basename='profile')
