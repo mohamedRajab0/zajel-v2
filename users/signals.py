@@ -8,9 +8,12 @@ from .models import Profile
 @receiver(post_save, sender=User)
 def user_postsave(sender, instance, created, **kwargs):
     user = instance
+
+    # add profile if user is created
     if created:
         Profile.objects.create(user=user)
     else:
+        # update allauth emailaddress if exists
         try:
             email_address = EmailAddress.objects.get_primary(user)
             if email_address.email != user.email:
@@ -18,6 +21,7 @@ def user_postsave(sender, instance, created, **kwargs):
                 email_address.verified = False
                 email_address.save()
         except:
+            # if allauth emailaddress doesn't exist create one
             EmailAddress.objects.create(
                 user=user, email=user.email, primary=True, verified=False
             )
