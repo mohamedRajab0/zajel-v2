@@ -43,3 +43,12 @@ def accept_request(request, *args, **kwargs):
     friend_request = get_active_friend_request(sender=sender_id, receiver=receiver)
     friend_request.accept()
     return Response({"accepted": f"You have accepted the friend request from {friend_request.sender.username}"})
+
+
+@api_view(['POST'])
+def decline_request(request, *args, **kwargs):
+    sender_id = kwargs.get('sender_id')
+    receiver = request.user
+    friend_request = get_active_friend_request(sender=sender_id, receiver=receiver)
+    friend_request.decline()
+    return Response({"declined": f"You have declined the friend request from {friend_request.sender.username}"})
