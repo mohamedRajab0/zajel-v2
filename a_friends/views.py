@@ -19,3 +19,11 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
         if not sender.is_authenticated:
             raise ValidationError({"error": "Authentication required"}, code=status.HTTP_401_UNAUTHORIZED)
         serializer.save(sender=sender)
+
+
+@api_view(['GET'])
+def freinds_list(request):
+    user = request.user
+    f_list = FriendList.objects.filter(user=user)
+    serialize = FriendListSerializer(f_list, many=True)
+    return Response(serialize.data, status=status.HTTP_200_OK)
