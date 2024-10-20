@@ -61,3 +61,14 @@ def cancel_request(request, *args, **kwargs):
     friend_request = get_active_friend_request(sender=sender, receiver=receiver_id)
     friend_request.cancel()
     return Response({"cancelled": f"You have cancelled the friend request to {friend_request.receiver.username}"})
+
+
+@api_view(['POST'])
+def unfriend(request, *args, **kwargs):
+    user = request.user
+    deletee_id = kwargs.get('user_id')
+    deletee = get_object_or_404(User, id=deletee_id)
+    user_friend_list = get_object_or_404(FriendList, user=user)
+    user_friend_list.unfriend(deletee)
+    
+    return Response({"deleted": f"You have unfriended {deletee.username} successfully"})
