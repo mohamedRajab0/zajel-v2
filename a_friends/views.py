@@ -27,3 +27,19 @@ def freinds_list(request):
     f_list = FriendList.objects.filter(user=user)
     serialize = FriendListSerializer(f_list, many=True)
     return Response(serialize.data, status=status.HTTP_200_OK)
+
+
+# Helper function to find active friend request
+def get_active_friend_request(sender, receiver):
+    return get_object_or_404(FriendRequest, sender=sender, receiver=receiver, is_active=True)
+
+
+# API Views
+
+@api_view(['POST'])
+def accept_request(request, *args, **kwargs):
+    sender_id = kwargs.get('user_id')
+    receiver = request.user
+    friend_request = get_active_friend_request(sender=sender_id, receiver=receiver)
+    friend_request.accept()
+    return Response({"accepted": f"You have accepted the friend request from {friend_request.sender.username}"})
