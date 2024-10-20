@@ -72,3 +72,20 @@ def unfriend(request, *args, **kwargs):
     user_friend_list.unfriend(deletee)
     
     return Response({"deleted": f"You have unfriended {deletee.username} successfully"})
+
+
+@api_view(['GET'])
+def list_all_incoming_requests(request):
+    user = request.user
+    incoming_requests = FriendRequest.objects.filter(receiver=user, is_active=True)
+    serializer = FriendRequestSerializer(incoming_requests, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@login_required
+@api_view(['GET'])
+def list_all_outgoing_requests(request):
+    user = request.user
+    outgoing_requests = FriendRequest.objects.filter(sender=user)
+    serializer = FriendRequestSerializer(outgoing_requests, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
