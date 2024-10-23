@@ -47,7 +47,15 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
+    'a_rtchat',
     'users',
+    'corsheaders',
+]
+
+#react frontend url
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
 ]
 
 MIDDLEWARE = [
