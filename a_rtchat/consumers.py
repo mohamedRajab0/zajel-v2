@@ -4,10 +4,14 @@ from django.contrib.auth.models import User
 from .models import ZajelMessage, ZajelGroup
 from channels.db import database_sync_to_async
 
+
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
+
+        print(f'New connection to room: {self.room_name}')  # Log the connection
+
 
         # Join the room group
         await self.channel_layer.group_add(
@@ -15,10 +19,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+        print(f"Handshake failed for room: {self.room_name}")
         await self.accept()
+        print(f"Handshake successful for room: {self.room_name}")
 
     async def disconnect(self, close_code):
         # Leave the room group
+        print(f'Disconnected from room: {self.room_name} with code {close_code}')
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name

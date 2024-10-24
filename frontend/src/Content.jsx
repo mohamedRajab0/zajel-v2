@@ -29,12 +29,13 @@ function ContentTable() {
     <div className="contenttable">
       {groups.map((group) => (
         <div key={group.id} className="group">
-          <WebsocketComponent key={group.id} roomName={group.group_name} />
+          {/* Render WebSocket for public_chat only once */}
+          {group.group_name === "public_chat" && (
+            <WebsocketComponent roomName={group.group_name} />
+          )}
           <Public_chat name={group.group_name} />
         </div>
       ))}
-      <Content_Chat />
-      <Content_Chat />
       <Content_Chat />
       <Footer />
     </div>

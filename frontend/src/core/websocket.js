@@ -1,29 +1,50 @@
-import { useEffect, useState } from "react";
-import { ADDRESS } from "./api";
+import { useEffect, useRef } from "react";
 
 const WebsocketComponent = ({ roomName }) => {
-  const [socket, setSocket] = useState(null);
+  const ws = useRef(null);
 
   useEffect(() => {
-    if (roomName && !socket) {
-      const url = `ws://${ADDRESS}/ws/chat/${encodeURIComponent(roomName)}/`;
-      const newSocket = new WebSocket(url);
-      setSocket(newSocket);
-
-      newSocket.onopen = () => {
-        console.log("Wesocket connection established", newSocket);
-      };
-
-      newSocket.onerror = (event) => {
-        console.error("websocket error", event);
-      };
-
-      newSocket.onclose = (event) => {
-        console.log("Websocket connection closed", event);
-      };
-      return () => newSocket.close();
+    // Close the existing WebSocket if it's already open
+    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+      ws.current.close();
     }
-  }, [roomName, socket]);
-  // return <div>Websocket component for room: {roomName}</div>;
+
+    const connectWebSocket = () => {
+      ws.current = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${roomName}/`);
+
+      ws.current.onopen = () => {
+        console.log("WebSocket connection established for room:", roomName);
+      };
+
+      ws.current.onmessage = (event) => {
+        console.log("Message received:", event.data);
+      };
+
+      ws.current.onerror = (error) => {
+        console.error("WebSocket error observed:", error);
+      };
+
+      ws.current.onclose = (e) => {
+        console.log("WebSocket connection closed:", e.code, e.reason);
+        if (e.code === 1006) {
+          console.error(
+            "WebSocket closed abnormally: Connection was interrupted or server-side issue."
+          );
+        }
+      };
+    };
+
+    connectWebSocket();
+
+    return () => {
+      if (ws.current) {
+        ws.current.close();
+        console.log(`Closed WebSocket for room: ${roomName}`);
+      }
+    };
+  }, [roomName]);
+
+  return null;
 };
+
 export default WebsocketComponent;
