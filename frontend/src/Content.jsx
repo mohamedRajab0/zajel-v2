@@ -6,7 +6,7 @@ import WebsocketComponent from "./core/websocket";
 import api from "./core/api";
 import Footer from "./Footer";
 
-function ContentTable() {
+function ContentTable({ onSelectChat }) {
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
@@ -25,14 +25,23 @@ function ContentTable() {
     };
     fetchGroups();
   }, []);
+
+  const handleChatClick = (group) => {
+    onSelectChat({
+      name: group.group_name,
+      // photo: group.photo || "default-photo-url",
+    });
+  };
   return (
     <div className="contenttable">
       {groups.map((group) => (
-        <div key={group.id} className="group">
-          {/* Render WebSocket for public_chat only once */}
-          {group.group_name === "public_chat" && (
-            <WebsocketComponent roomName={group.group_name} />
-          )}
+        <div
+          key={group.id}
+          className="group"
+          onClick={() => handleChatClick(group)}
+        >
+          <WebsocketComponent roomName={group.group_name} />
+
           <Public_chat name={group.group_name} />
         </div>
       ))}

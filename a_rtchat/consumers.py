@@ -19,7 +19,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        print(f"Handshake failed for room: {self.room_name}")
         await self.accept()
         print(f"Handshake successful for room: {self.room_name}")
 
