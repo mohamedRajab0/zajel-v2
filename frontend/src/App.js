@@ -1,22 +1,23 @@
 import Header from "./Header.jsx";
 import ContentTable from "./Content.jsx";
 import Chat from "./Chat.jsx";
-import Bob from "./assets/bob.jpeg";
+// import Bob from "./assets/bob.jpeg";
+import { useState } from "react";
 function App() {
+  const [selectedChat, setSelectedChat] = useState(null);
+
   const handleLogout = () => {
     alert("Logging out...");
   };
-  const newcontact = {
-    name: "Bob",
-    lastMessage: "hi, are you okay",
-    photo: Bob,
+  const handleChatSelect = (chat) => {
+    setSelectedChat(chat);
   };
   return (
     <>
       <Header onlogout={handleLogout} />
       <div className="app-container">
-        <ContentTable />
-        <Chat contact={newcontact} />
+        <ContentTable onSelectChat={handleChatSelect} />
+        {selectedChat && <Chat contact={selectedChat} />}
       </div>
     </>
   );
