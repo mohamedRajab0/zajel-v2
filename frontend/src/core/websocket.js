@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { ADDRESS } from "./api";
 
 const WebsocketComponent = ({ roomName }) => {
   const ws = useRef(null);
@@ -10,7 +11,7 @@ const WebsocketComponent = ({ roomName }) => {
     }
 
     const connectWebSocket = () => {
-      ws.current = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${roomName}/`);
+      ws.current = new WebSocket(`ws://${ADDRESS}/ws/chat/${roomName}/`);
 
       ws.current.onopen = () => {
         console.log("WebSocket connection established for room:", roomName);

@@ -12,9 +12,9 @@ router.register(r"groups", views.ZajelGroupViewSet, basename="groups")
 
 urlpatterns = [
     path("", include(router.urls)),
-    # path(
-    #     "api/groupMessages/<int:group_id>/",
-    #     views.ZajelGroupMessagesViewSet.as_view({"get": "list"}),
-    #     name="group-messages-list",
-    # ),
+    path(
+        "groupmessages/<int:group_id>/",
+        views.ZajelGroupMessagesViewSet.as_view({"get": "list"}),
+        name="group-messages-list",
+    ),
 ]

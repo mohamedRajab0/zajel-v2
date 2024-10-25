@@ -28,7 +28,9 @@ function ContentTable({ onSelectChat }) {
 
   const handleChatClick = (group) => {
     onSelectChat({
+      id: group.id,
       name: group.group_name,
+
       // photo: group.photo || "default-photo-url",
     });
   };
