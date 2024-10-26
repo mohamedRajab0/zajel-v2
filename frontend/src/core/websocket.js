@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { ADDRESS } from "./api";
 
-const WebsocketComponent = ({ roomName }) => {
+const WebsocketComponent = ({ roomName, onMessage, onSendMessageRef }) => {
   const ws = useRef(null);
 
   useEffect(() => {
@@ -18,6 +18,13 @@ const WebsocketComponent = ({ roomName }) => {
       };
 
       ws.current.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        // onMessage(data.message);
+        if (typeof onMessage === "function") {
+          onMessage(data.message);
+        } else {
+          console.error("onMessage is not a function");
+        }
         console.log("Message received:", event.data);
       };
 
@@ -37,13 +44,26 @@ const WebsocketComponent = ({ roomName }) => {
 
     connectWebSocket();
 
+    // Ensure onSendMessageRef is defined
+    if (
+      onSendMessageRef &&
+      typeof onSendMessageRef === "object" &&
+      onSendMessageRef !== null
+    ) {
+      onSendMessageRef.current = (message) => {
+        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+          ws.current.send(JSON.stringify({ message }));
+        }
+      };
+    }
+
     return () => {
       if (ws.current) {
         ws.current.close();
         console.log(`Closed WebSocket for room: ${roomName}`);
       }
     };
-  }, [roomName]);
+  }, [roomName, onMessage, onSendMessageRef]);
 
   return null;
 };

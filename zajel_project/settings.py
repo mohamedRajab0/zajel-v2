@@ -48,12 +48,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
+    'django_cleanup.apps.CleanupConfig',
+
     'a_rtchat',
     'users',
     'corsheaders',
 ]
 
-#react frontend url
+# react frontend url
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000',
     'http://localhost:3000',
@@ -63,7 +65,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Add your frontend URL here
 ]
 
-#CORS_ALLOW_CREDENTIALS = True  # If you need to send cookies or HTTP authentication
+# CORS_ALLOW_CREDENTIALS = True  # If you need to send cookies or HTTP authentication
 
 
 MIDDLEWARE = [
@@ -156,6 +158,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -169,5 +174,3 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-
-

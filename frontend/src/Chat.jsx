@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Headerchat from "./Header_chat";
 import Messagebar from "./Messagebar";
 import MessageScreen from "./Message_screen";
 import api from "./core/api";
+import WebsocketComponent from "./core/websocket";
+import { handleSendMessage, handleReceiveMessage } from "./core/messagehandler"; // Import handlers
 
 function Chat({ contact }) {
   const [messages, setMessages] = useState([]);
-
-  const handleSendMessage = (text) => {
-    setMessages([...messages, { text, sender: "Me" }]);
-  };
+  const sendMessageRef = useRef(null);
 
   useEffect(() => {
-    const fetchmessages = async () => {
+    const fetchMessages = async () => {
       if (contact) {
         try {
           const response = await api({
@@ -20,20 +19,31 @@ function Chat({ contact }) {
             url: `/api/groupmessages/${contact.id}/`,
           });
           setMessages(response.data);
-          console.log("group number", contact.id);
+          console.log("Group number", contact.id);
         } catch (error) {
           console.error("Error fetching messages", error);
         }
       }
     };
-    fetchmessages();
+    fetchMessages();
   }, [contact]);
+
+  console.log("onMessage type:", typeof handleReceiveMessage);
 
   return (
     <div className="chatbox">
       <Headerchat contact={contact} />
       <MessageScreen messages={messages} />
-      <Messagebar onSendMessage={handleSendMessage} />
+      <Messagebar
+        onSendMessage={(text) =>
+          handleSendMessage(text, sendMessageRef, setMessages)
+        }
+      />
+      <WebsocketComponent
+        roomName={contact.name}
+        onMessage={(message) => handleReceiveMessage(message, setMessages)}
+        onSendMessageRef={sendMessageRef}
+      />
     </div>
   );
 }

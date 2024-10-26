@@ -30,8 +30,7 @@ function ContentTable({ onSelectChat }) {
     onSelectChat({
       id: group.id,
       name: group.group_name,
-
-      // photo: group.photo || "default-photo-url",
+      photo: group.group_image,
     });
   };
   return (
