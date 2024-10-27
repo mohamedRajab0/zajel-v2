@@ -11,7 +11,7 @@ function Public_chat({ name }) {
         height="35"
       />
       <h2 className="publicchat-name">{name}</h2>
-      <p className="publicchat-lastmessage">hi, are you okay</p>
+      <p className="publicchat-lastmessage"></p>
     </div>
   );
 }

@@ -51,3 +51,4 @@ markdown==3.7
 django-filter==24.3
 django-cors-headers==4.5.0
 django_cleanup==9.0.0
+djangorestframework-simplejwt==5.3.1

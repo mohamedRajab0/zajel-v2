@@ -39,6 +39,12 @@
   flex-direction: column;
 }
 
+.contenttable .search-bar {
+  width: 99.5%;
+  border: 1px solid hsl(0, 0%, 80%);
+  border-radius: 10px;
+}
+
 .contentchat,
 .publicchat {
   background-color: antiquewhite;

@@ -1,25 +1,24 @@
-import Header from "./Header.jsx";
-import ContentTable from "./Content.jsx";
-import Chat from "./Chat.jsx";
-// import Bob from "./assets/bob.jpeg";
-import { useState } from "react";
-function App() {
-  const [selectedChat, setSelectedChat] = useState(null);
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Login from "./Login";
+import Signup from "./Signup";
+import PrivateRoute from "./utils/privateroute";
+import Homepage from "./Homepage";
 
-  const handleLogout = () => {
-    alert("Logging out...");
-  };
-  const handleChatSelect = (chat) => {
-    setSelectedChat(chat);
-  };
+function App() {
   return (
-    <>
-      <Header onlogout={handleLogout} />
-      <div className="app-container">
-        <ContentTable onSelectChat={handleChatSelect} />
-        {selectedChat && <Chat contact={selectedChat} />}
-      </div>
-    </>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <Homepage />
+          </PrivateRoute>
+        }
+      />
+    </Routes>
   );
 }
 
