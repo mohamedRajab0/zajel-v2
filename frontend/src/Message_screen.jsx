@@ -1,11 +1,17 @@
 import React from "react";
+import "./Message_screen.css";
 
-function MessageScreen({ messages }) {
+function MessageScreen({ messages, currentUser }) {
   return (
     <div className="chat-messages">
       {messages.map((msg, index) => (
-        <div key={index} className="message">
-          <p>{msg.text}</p>
+        <div
+          key={index}
+          className={`message ${
+            msg.author === currentUser ? "sent" : "recevied"
+          }`}
+        >
+          <p>{msg.body}</p>
         </div>
       ))}
     </div>
