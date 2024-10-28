@@ -41,7 +41,9 @@ export const AuthProvider = ({ children }) => {
     if (response.status === 200) {
       console.log("Logged In");
       setAuthTokens(data);
+      //decode access token to get user info
       setUser(jwtDecode(data.access));
+      //save access token in local storage
       localStorage.setItem("authTokens", JSON.stringify(data));
       navigate("/");
       swal.fire({

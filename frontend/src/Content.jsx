@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-pascal-case */
 import React, { useEffect, useState } from "react";
 import Public_chat from "./Publicchat";
-import Content_Chat from "./Contact_chat";
+// import Content_Chat from "./Contact_chat";
 import WebsocketComponent from "./core/websocket";
 import api from "./core/api";
 import Footer from "./Footer";
@@ -46,7 +46,7 @@ function ContentTable({ onSelectChat }) {
           <Public_chat name={group.group_name} />
         </div>
       ))}
-      <Content_Chat />
+      {/* <Content_Chat /> */}
       <Footer />
     </div>
   );

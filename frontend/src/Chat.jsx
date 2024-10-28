@@ -20,6 +20,7 @@ function Chat({ contact }) {
           });
           setMessages(response.data);
           console.log("Group number", contact.id);
+          console.log("response", response);
         } catch (error) {
           console.error("Error fetching messages", error);
         }

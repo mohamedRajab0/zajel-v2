@@ -11,7 +11,13 @@ const WebsocketComponent = ({ roomName, onMessage, onSendMessageRef }) => {
     }
 
     const connectWebSocket = () => {
-      ws.current = new WebSocket(`ws://${ADDRESS}/ws/chat/${roomName}/`);
+      const authTokensSring = localStorage.getItem("authTokens");
+      const authTokens = JSON.parse(authTokensSring);
+      const token = authTokens.access;
+      console.log("token=", token);
+      ws.current = new WebSocket(
+        `ws://${ADDRESS}/ws/chat/${roomName}/?token=${token}`
+      );
 
       ws.current.onopen = () => {
         console.log("WebSocket connection established for room:", roomName);

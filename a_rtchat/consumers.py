@@ -1,17 +1,29 @@
 import json
+from django.conf import settings
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from .models import ZajelMessage, ZajelGroup
 from channels.db import database_sync_to_async
+import jwt
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        # extract token
+        query_string = self.scope['query_string'].decode('utf-8')
+        print(f"Query String: {type(query_string)}")  # Debugging line
+
+        self.token = self.scope['query_string'].decode(
+            'utf-8').split('token=')[-1]
+        self.user = await self.get_user_from_token(self.token)
+        self.scope['user'] = self.user
+
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
 
         # Log the connection
         print(f'New connection to room: {self.room_name}')
+        print(self.user)
 
         # Join the room group
         await self.channel_layer.group_add(
@@ -31,10 +43,35 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    # Receive message from WebSocket
+    async def get_user_from_token(self, token):
+        if token:
+            try:
+                # decode token
+                payload = jwt.decode(
+                    token, settings.SECRET_KEY, algorithms=["HS256"])
+                user_id = payload['user_id']
+                user = await database_sync_to_async(User.objects.get)(id=user_id)
+                return user
+            except jwt.ExpiredSignatureError:
+                print("Token has expired")
+                return AnonymousUser()
+            except jwt.DecodeError as e:
+                print(f"Token decoding error: {e}")
+                return AnonymousUser()
+            except User.DoesNotExist:
+                print(f"User with id {user_id} does not exist")
+                return AnonymousUser()
+        print("No token provided")
+        return AnonymousUser()
+
+        # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+
+        # Log user authentication status
+        print(f"User authenticated: {self.scope['user'].is_authenticated}")
+        print(f"Username: {self.scope['user']}")
 
         # Get the current user from the WebSocket scope
         user = self.scope["user"]
