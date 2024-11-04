@@ -18,6 +18,10 @@ export const WebSocketProvider = ({ children, roomName }) => {
       const authTokens = JSON.parse(authTokensSring);
       const token = authTokens.access;
 
+      if (ws.current) {
+        ws.current.close();
+      }
+
       ws.current = new WebSocket(
         `ws://localhost:8000/ws/chat/${roomName}/?token=${token}`
       );
@@ -28,8 +32,8 @@ export const WebSocketProvider = ({ children, roomName }) => {
         setIsWsOpen(true);
       };
 
-      ws.current.onclose = () => {
-        console.log("WebSocket closed");
+      ws.current.onclose = (event) => {
+        console.log("WebSocket fully closed", event.code);
         setIsWsOpen(false);
       };
 

@@ -14,8 +14,6 @@ function Friendlist() {
   const dropdownRef = useRef(null);
   const { authTokens } = useContext(AuthContext);
 
-  const UserId = authTokens?.user?.pk;
-
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
@@ -71,6 +69,7 @@ function Friendlist() {
 
   useEffect(() => {
     fetchFriendData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAcceptRequest = async (userId) => {
@@ -145,34 +144,34 @@ function Friendlist() {
             <h3>Requests In</h3>
             <ul>
               {requestsIn.map((friend) => (
-                  <li className="friend-item" key={friend.sender.id}>
-                    <img
-                      src={
-                        friend.sender.profile_image
-                          ? `http://127.0.0.1:8000${friend.sender.profile_image}`
-                          : publicphoto
-                      }
-                      alt={`${friend.sender.username}'s profile`}
-                      width="50"
-                      height="50"
-                    />
-                    <span className="friend-username">
-                      {friend.sender.username}
-                    </span>
-                    <button
-                      className="accept-button"
-                      onClick={() => handleAcceptRequest(friend.sender.id)}
-                    >
-                      accept
-                    </button>
-                    <button
-                      className="delete-button"
-                      onClick={() => handleDeleteRequestSend(friend.sender.id)}
-                    >
-                      decline
-                    </button>
-                  </li>
-                ))}
+                <li className="friend-item" key={friend.sender.id}>
+                  <img
+                    src={
+                      friend.sender.profile_image
+                        ? `http://127.0.0.1:8000${friend.sender.profile_image}`
+                        : publicphoto
+                    }
+                    alt={`${friend.sender.username}'s profile`}
+                    width="50"
+                    height="50"
+                  />
+                  <span className="friend-username">
+                    {friend.sender.username}
+                  </span>
+                  <button
+                    className="accept-button"
+                    onClick={() => handleAcceptRequest(friend.sender.id)}
+                  >
+                    accept
+                  </button>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDeleteRequestSend(friend.sender.id)}
+                  >
+                    decline
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         );
@@ -182,30 +181,28 @@ function Friendlist() {
             <h3>Requests Out</h3>
             <ul>
               {requestsOut.map((user) => (
-                  <li className="friend-item" key={user.receiver.id}>
-                    <img
-                      src={
-                        user.receiver.profile_image
-                          ? `http://127.0.0.1:8000${user.receiver.profile_image}`
-                          : publicphoto
-                      }
-                      alt={`${user.receiver.username}'s profile`}
-                      width="50"
-                      height="50"
-                    />
-                    <span className="friend-username">
-                      {user.receiver.username}
-                    </span>
-                    <button
-                      className="delete-button"
-                      onClick={() =>
-                        handleDeleteRequestReceive(user.receiver.id)
-                      }
-                    >
-                      Cancel
-                    </button>
-                  </li>
-                ))}
+                <li className="friend-item" key={user.receiver.id}>
+                  <img
+                    src={
+                      user.receiver.profile_image
+                        ? `http://127.0.0.1:8000${user.receiver.profile_image}`
+                        : publicphoto
+                    }
+                    alt={`${user.receiver.username}'s profile`}
+                    width="50"
+                    height="50"
+                  />
+                  <span className="friend-username">
+                    {user.receiver.username}
+                  </span>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDeleteRequestReceive(user.receiver.id)}
+                  >
+                    Cancel
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         );
@@ -215,26 +212,26 @@ function Friendlist() {
             <h3>Friends List</h3>
             <ul>
               {friendsList.map((friend) => (
-                  <li className="friend-item" key={friend.id}>
-                    <img
-                      src={
-                        friend.profile_image
-                          ? `http://127.0.0.1:8000${friend.profile_image}`
-                          : publicphoto
-                      }
-                      alt={`${friend.username}'s profile`}
-                      width="50"
-                      height="50"
-                    />
-                    <span className="friend-username">{friend.username}</span>
-                    <button
-                      className="delete-button"
-                      onClick={() => handleDeleteFriend(friend.id)}
-                    >
-                      Unfriend
-                    </button>
-                  </li>
-                ))}
+                <li className="friend-item" key={friend.id}>
+                  <img
+                    src={
+                      friend.profile_image
+                        ? `http://127.0.0.1:8000${friend.profile_image}`
+                        : publicphoto
+                    }
+                    alt={`${friend.username}'s profile`}
+                    width="50"
+                    height="50"
+                  />
+                  <span className="friend-username">{friend.username}</span>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDeleteFriend(friend.id)}
+                  >
+                    Unfriend
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         );
