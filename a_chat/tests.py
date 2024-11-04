@@ -26,3 +26,25 @@ class ZajelGroupTest(TestCase):
 
     def test_group_name_property(self):
         self.assertEqual(self.group.name, 'test_group')
+
+
+class ZajelMessageTest(TestCase):
+    def setUp(self):
+        self.group = ZajelGroup.objects.create(group_name='test_group')
+        self.user = User.objects.create(username='test_user')
+        self.message = ZajelMessage.objects.create(group_name=self.group, author=self.user, body='test message')
+
+    def test_message_group_name(self):
+        self.assertEqual(self.message.group_name, self.group)
+
+    def test_message_author(self):
+        self.assertEqual(self.message.author, self.user)
+
+    def test_message_body(self):
+        self.assertEqual(self.message.body, 'test message')
+
+    def test_message_created(self):
+        self.assertIsNotNone(self.message.created)
+
+    def test_message_str(self):
+        self.assertEqual(str(self.message), f'{self.user} : test message')
