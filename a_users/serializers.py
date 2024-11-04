@@ -4,8 +4,6 @@ from django.contrib.auth.password_validation import validate_password
 from .models import Profile
 
 # Register Serializer
-
-
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -22,8 +20,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 # User Serializer
-
-
 class UserSerializer(serializers.ModelSerializer):
     profile_image = serializers.ImageField(source="profile.image", read_only=True)
 
