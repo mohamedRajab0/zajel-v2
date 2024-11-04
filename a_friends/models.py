@@ -55,8 +55,6 @@ class FriendList(models.Model):
     def __repr__(self):
         return self.friends.all()
 
-    # def __str__(self):
-    #     return str(self.friends.all())
 
     def get_friends(self):
         return self.friends.all()
@@ -102,13 +100,18 @@ class FriendRequest(models.Model):
                 code=status.HTTP_403_FORBIDDEN,
             )
 
+    def save(self, is_accepting = 0,*args, **kwargs):
+        if is_accepting == 0:
+            self.validateFriendRequest()
+        super(FriendRequest, self).save(*args, **kwargs)
+
     def accept(self):
         receiver_friend_list = FriendList.objects.get(user=self.receiver)
         sender_friend_list = FriendList.objects.get(user=self.sender)
 
         receiver_friend_list.add_friend(self.sender)
         sender_friend_list.add_friend(self.receiver)
-        self.save()
+        self.save(is_accepting=1)
         self.delete()
 
     # # the receiver declined the friend request
