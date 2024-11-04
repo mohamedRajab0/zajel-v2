@@ -9,41 +9,33 @@ from .models import Profile
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'password', 'email')
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ("username", "password", "email")
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(
-            validated_data['username'], validated_data['email'], validated_data['password'])
+            validated_data["username"],
+            validated_data["email"],
+            validated_data["password"],
+        )
         return user
+
 
 # User Serializer
 
 
 class UserSerializer(serializers.ModelSerializer):
-    profile_image = serializers.ImageField(
-        source='profile.image', read_only=True)
+    profile_image = serializers.ImageField(source="profile.image", read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'profile_image')
+        fields = ("id", "username", "email", "profile_image")
 
-# Change Password Serializer
-
-
-class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
-
-    def validate_new_password(self, value):
-        validate_password(value)
-        return value
 
 # Profile Serializer
-
-
 class ProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+
     class Meta:
         model = Profile
-        fields = '__all__'
-        read_only_fields = ('user',)
+        fields = ["user", "image", "displayname", "info"]
