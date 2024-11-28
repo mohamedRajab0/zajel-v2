@@ -46,15 +46,15 @@ export const AuthProvider = ({ children }) => {
       //save access token in local storage
       localStorage.setItem("authTokens", JSON.stringify(data));
       navigate("/");
-      swal.fire({
-        title: "Login Successful",
-        icon: "success",
-        toast: true,
-        timer: 6000,
-        position: "top-right",
-        timerProgressBar: true,
-        showConfirmButton: false,
-      });
+      // swal.fire({
+      //   title: "Login Successful",
+      //   icon: "success",
+      //   toast: true,
+      //   timer: 6000,
+      //   position: "top-right",
+      //   timerProgressBar: true,
+      //   showConfirmButton: false,
+      // });
     } else {
       console.log(response.status);
       console.log("there was a server issue");
@@ -136,15 +136,15 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       localStorage.removeItem("authTokens");
       navigate("/login");
-      swal.fire({
-        title: "YOu have been logged out...",
-        icon: "success",
-        toast: true,
-        timer: 6000,
-        position: "top-right",
-        timerProgressBar: true,
-        showConfirmButton: false,
-      });
+      // swal.fire({
+      //   title: "YOu have been logged out...",
+      //   icon: "success",
+      //   toast: true,
+      //   timer: 6000,
+      //   position: "top-right",
+      //   timerProgressBar: true,
+      //   showConfirmButton: false,
+      // });
     }
   };
 
