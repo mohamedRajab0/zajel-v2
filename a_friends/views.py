@@ -29,6 +29,10 @@ class FriendRequestViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def freinds_list(request):
+    print("\n\n---------------------------")
+    print("USER: ", request.user)
+    print("request: ", request)
+    print("---------------------------\n\n")
     user = request.user
     user_friend_list = FriendList.objects.get(user=user)
     serialize = UserSerializer(user_friend_list.get_friends(), many=True)
@@ -41,14 +45,15 @@ def get_active_friend_request(sender, receiver):
 
 
 # TESTING VIEW
-# @csrf_exempt
-# @api_view(['POST', 'DELETE'])
-# @permission_classes([AllowAny]) 
-# def test(request, *args, **kwargs):
-#     print(request)
-#     print(args)
-#     print(kwargs)
-#     return Response({"sent": f"Friend request sent to "})
+@csrf_exempt
+@api_view(['POST', 'DELETE', 'GET'])
+@permission_classes([AllowAny]) 
+def test(request, *args, **kwargs):
+    print("USER: ", request.user)
+    print("request: ", request)
+    print("args: ", args)
+    print("kwargs: ", kwargs)
+    return Response({"sent": f"Friend request sent to "})
 
 @api_view(['POST'])
 def accept_request(request, *args, **kwargs):
