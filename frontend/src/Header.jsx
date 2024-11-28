@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import LOGOUT from "./assets/logout.webp";
 import AuthContext from "./context/AuthContext";
 import Friendlist from "./friends/Friendlist";
 import "./Header.css";
-import { useNavigate } from "react-router-dom";
+import appIcon from './assets/zagel.png';
 
 function Header() {
   const { logoutUser } = useContext(AuthContext);
@@ -13,8 +14,11 @@ function Header() {
   const goToProfile = () => navigate("/profile");
 
   return (
-    <headers className="upperpart">
-      <h1 className="title">zajel</h1>
+    <header className="upperpart">
+      {/* Use Link for SPA navigation */}
+      <Link to="/">
+        <img src={appIcon} alt="icon" className="app-icon" />
+      </Link>
       <div className="button-container">
         <Friendlist />
         <button onClick={goToProfile}>Profile</button>
@@ -22,7 +26,7 @@ function Header() {
           <img src={LOGOUT} alt="Logout" width="35" height="35" />
         </button>
       </div>
-    </headers>
+    </header>
   );
 }
 
