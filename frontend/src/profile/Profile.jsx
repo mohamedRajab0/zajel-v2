@@ -3,16 +3,19 @@ import axios from "axios";
 import Default from "../assets/default.jpeg";
 import AuthContext from "../context/AuthContext";
 import "./Profile.css";
-function Profile() {
-  const [userData, setUserData] = useState(null);
-  const [isEditingInfo, setIsEditingInfo] = useState(false);
-  const [newInfo, setNewInfo] = useState("");
-  const [isEditingPhoto, setIsEditingPhoto] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [isEditingUsername, setIsEditingUsername] = useState(false);
-  const [newUsername, setNewUsername] = useState("");
-  const { authTokens } = useContext(AuthContext);
+import Header from "../Header";
 
+function Profile() {
+  const [userData, setUserData] = useState(null); // Store user data
+  const [isEditingInfo, setIsEditingInfo] = useState(false); // Control info editing mode
+  const [newInfo, setNewInfo] = useState(""); // Hold updated info
+  const [isEditingPhoto, setIsEditingPhoto] = useState(false); // Control photo editing mode
+  const [selectedFile, setSelectedFile] = useState(null); // Hold selected photo file
+  const [isEditingUsername, setIsEditingUsername] = useState(false); // Control username editing mode
+  const [newUsername, setNewUsername] = useState(""); // Hold updated username
+  const { authTokens } = useContext(AuthContext); // Retrieve authentication tokens from context
+
+  // Fetch user data when the component loads
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -20,30 +23,29 @@ function Profile() {
           "http://localhost:8000/user/api/profile/",
           {
             headers: {
-              Authorization: `Bearer ${authTokens?.access}`,
+              Authorization: `Bearer ${authTokens?.access}`, // Add authorization header
             },
           }
         );
+        // Find and set the profile of the authenticated user
         const data = response.data.find(
           (profile) => profile.id === authTokens?.user.pk
         );
-        console.log("data", data.displayname);
         setUserData(data);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
+
     fetchUserData();
   }, [authTokens]);
 
-  const handleEditPhoto = () => {
-    setIsEditingPhoto(true);
-  };
-
+  // Handle file selection for photo upload
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
 
+  // Upload the selected photo and update user data
   const handlePhotoUpload = async () => {
     if (!selectedFile) return;
 
@@ -61,28 +63,23 @@ function Profile() {
           },
         }
       );
-      setUserData((prev) => ({ ...prev, image: response.data.image }));
-      setIsEditingPhoto(false);
-      setSelectedFile(null);
+      setUserData((prev) => ({ ...prev, image: response.data.image })); // Update user image
+      setIsEditingPhoto(false); // Exit photo editing mode
+      setSelectedFile(null); // Clear selected file
     } catch (error) {
       console.error("Error uploading photo:", error);
     }
   };
 
-  const handleEditUsername = () => {
-    setIsEditingUsername(true);
-    setNewUsername(userData.username);
-  };
-
-  const handleUsernameChange = (e) => {
-    setNewUsername(e.target.value);
-  };
-
+  // Submit updated username
   const handleSubmitUsernameChange = async (e) => {
     e.preventDefault();
+    console.log("iam going to send USER NAME CHANGE : " , e)
+    console.log("iam going to send USER NAME CHANGE : " , newUsername)
+
     try {
       const response = await axios.put(
-        `http://localhost:8000/user/api/profile/${authTokens?.user.pk}/`, // Adjust the endpoint accordingly
+        `http://localhost:8000/user/api/profile/${authTokens?.user.pk}/`,
         { displayname: newUsername },
         {
           headers: {
@@ -90,27 +87,19 @@ function Profile() {
           },
         }
       );
-      setUserData(response.data);
-      setIsEditingUsername(false);
+      setUserData(response.data); // Update username
+      setIsEditingUsername(false); // Exit username editing mode
     } catch (error) {
       console.error("Error updating username:", error);
     }
   };
 
-  const handleEditInfo = () => {
-    setIsEditingInfo(true);
-    setNewInfo(userData.info);
-  };
-
-  const handleInfoChange = (e) => {
-    setNewInfo(e.target.value);
-  };
-
+  // Submit updated info
   const handleSubmitInfoChange = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `http://localhost:8000/user/api/profile/${authTokens?.user.pk}/`, // Adjust the endpoint accordingly
+        `http://localhost:8000/user/api/profile/${authTokens?.user.pk}/`,
         { info: newInfo },
         {
           headers: {
@@ -118,77 +107,106 @@ function Profile() {
           },
         }
       );
-      setUserData(response.data);
-      setIsEditingInfo(false);
+      setUserData(response.data); // Update info
+      setIsEditingInfo(false); // Exit info editing mode
     } catch (error) {
       console.error("Error updating info:", error);
     }
   };
+
   return (
-    <div className="profile-page">
-      <div className="profile-content-box">
-        <h2>Zajel Profile</h2>
-        <img
-          src={userData?.image || Default}
-          alt="User"
-          width="100"
-          height="100"
-        />
-        <div>
-          <p>Name: {userData?.displayname}</p>
-          <p>Info: {userData?.info}</p>
-        </div>
-        <button onClick={handleEditPhoto}>Edit Photo</button>
-        {isEditingPhoto && (
+    <div ClassName="flex flex-col h-screen" height= "1vh">
+      <Header />
+      <div className="profile-page">
+        <div className="profile-content-box">
+          <h2>Zajel Profile</h2>
+
+          {/* Display user image or default image */}
+          <img
+            src={userData?.image || Default}
+            alt="User"
+            width="100"
+            height="100"
+          />
+
+          {/* Display user data */}
           <div>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            <button onClick={handlePhotoUpload}>Upload</button>
-            <button
-              className="cancel-button"
-              onClick={() => setIsEditingPhoto(false)}
-            >
-              Cancel
-            </button>
+            <p>Name: {userData?.displayname}</p>
+            <p>Info: {userData?.info}</p>
           </div>
-        )}
-        <button onClick={handleEditUsername}>Edit Username</button>
-        {isEditingUsername && (
-          <form onSubmit={handleSubmitUsernameChange}>
-            <input
-              type="text"
-              value={newUsername}
-              onChange={handleUsernameChange}
-              placeholder="Enter new username"
-            />
-            <button type="submit">Submit</button>
-            <button
-              className="cancel-button"
-              onClick={() => setIsEditingUsername(false)}
-            >
-              Cancel
-            </button>
-          </form>
-        )}
-        <button onClick={handleEditInfo}>Edit Info</button>
-        {isEditingInfo && (
-          <form onSubmit={handleSubmitInfoChange}>
-            <input
-              type="text"
-              value={newInfo}
-              onChange={handleInfoChange}
-              placeholder="Enter new info"
-            />
-            <button type="submit">Submit</button>
-            <button
-              className="cancel-button"
-              onClick={() => setIsEditingInfo(false)}
-            >
-              Cancel
-            </button>
-          </form>
-        )}
+
+          {/* Edit Photo Section */}
+          <button onClick={() => setIsEditingPhoto(true)}>Edit Photo</button>
+          {isEditingPhoto && (
+            <div>
+              <input type="file" accept="image/*" onChange={handleFileChange} />
+              <button onClick={handlePhotoUpload}>Upload</button>
+              <button
+                className="cancel-button"
+                onClick={() => setIsEditingPhoto(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
+          {/* Edit Username Section */}
+          <button
+            onClick={() => {
+              setIsEditingUsername(true);
+              setNewUsername(userData?.displayname || "puta");
+            }}
+          >
+            Edit Username
+          </button>
+          {isEditingUsername && (
+            <form onSubmit={handleSubmitUsernameChange}>
+              <input
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                placeholder="Enter new username"
+              />
+              <button type="submit">Submit</button>
+              <button
+                className="cancel-button"
+                onClick={() => setIsEditingUsername(false)}
+              >
+                Cancel
+              </button>
+            </form>
+          )}
+
+          {/* Edit Info Section */}
+          <button
+            onClick={() => {
+              setIsEditingInfo(true);
+              setNewInfo(userData?.info || "");
+            }}
+          >
+            Edit Info
+          </button>
+          {isEditingInfo && (
+            <form onSubmit={handleSubmitInfoChange}>
+              <input
+                type="text"
+                value={newInfo}
+                onChange={(e) => setNewInfo(e.target.value)}
+                placeholder="Enter new info"
+              />
+              <button type="submit">Submit</button>
+              <button
+                className="cancel-button"
+                onClick={() => setIsEditingInfo(false)}
+              >
+                Cancel
+              </button>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+
 export default Profile;
